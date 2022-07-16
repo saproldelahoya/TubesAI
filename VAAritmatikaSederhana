@@ -1,0 +1,120 @@
+import pyttsx3
+import speech_recognition as sr
+
+engine = pyttsx3.init('sapi5')
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[1].id)
+
+def speak(StringValue):
+	engine.say(StringValue)
+	engine.runAndWait()
+
+def takeCommand():
+
+	print("Say")
+	speak("Say")
+	r = sr.Recognizer()
+	with sr.Microphone() as source:
+		print("Listening...")
+		r.pause_threshold = 1
+		audio = r.listen(source)
+
+	try:
+		print("Recognizing...")
+		query = r.recognize_google(audio, language='en-us')
+		print(f"Your Command : {query}\n")
+
+	except Exception as e:
+		print("Say that again please...")
+		speak("Say that again please...")
+		return "None"
+	return query
+
+var=takeCommand()
+print(var)
+
+def getCommandValue(StringValue):
+	listOfCommands=[]
+	listOfvalues=[]
+
+	for item in StringValue.split(" "):
+		if item.isnumeric():
+			listOfvalues.append(item)
+		else:
+			listOfCommands.append(item)
+
+	return listOfCommands,listOfvalues
+
+def getCommandValue(StringValue):
+	listOfCommands=[]
+	listOfvalues=[]
+
+	for item in StringValue.split(" "):
+		if item.isnumeric():
+			listOfvalues.append(int(item))
+		else:
+			listOfCommands.append(item)
+
+	return listOfCommands,listOfvalues
+
+ListOfAddCommand = ['add','addition','sum','adding','+']
+
+ListOfSubCommand = ['sub','subtraction','subtract','-']
+
+ListOfDivCommand = ['div','/','divide','divided',"division"]
+
+ListOfMulCommand = ['multiply','multiplycation','*']
+
+
+def Addition(ListOfValues):
+	return ListOfValues[0]+ListOfValues[1]
+
+def Subtraction(ListOfValues):
+	return ListOfValues[0]-ListOfValues[1]
+
+def Multiplication(ListOfValues):
+	return ListOfValues[0]*ListOfValues[1]
+
+def Division(ListOfValues):
+	return ListOfValues[0]/ListOfValues[1]
+
+
+op='yes'
+while op=='yes':
+
+	Query=takeCommand()
+
+	listofCommand,listOfValues=getCommandValue(Query)
+
+	for command in listofCommand:
+		if command.lower() in ListOfAddCommand:
+			sum1=Addition(listOfValues)
+			print(f"Addition of {listOfValues} is {sum1}")
+			speak(f"Addition of {listOfValues} is {sum1}")
+			break
+		elif command.lower() in ListOfSubCommand:
+			sub1=Subtraction(listOfValues)
+			print(f"Subtraction of {listOfValues} is {sub1}")
+			speak(f"Subtraction of {listOfValues} is {sub1}")
+			break
+		elif command.lower() in ListOfMulCommand:
+			mul1=Multiplication(listOfValues)
+			print(f"Multiplication of {listOfValues} is {mul1}")
+			speak(f"Multiplication of {listOfValues} is {mul1}")
+			break
+		elif command.lower() in ListOfDivCommand:
+			div1=Division(listOfValues)
+			print(f"Division of {listOfValues} is {div1}")
+			speak(f"Divison of {listOfValues} is {div1}")
+			break
+		else:
+			pass
+	else:
+		print("We could not find any command")
+		speak("We could not find any command")
+
+	speak("Do you want to continue : yes Or no")
+	print("Do you want to continue : yes Or no")
+	op=takeCommand().lower()
+
+print("Thanks you")
